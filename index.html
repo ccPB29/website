@@ -18,7 +18,7 @@
 .page{max-width:none;padding:0;margin:0}.top{position:fixed;top:0;left:50%;transform:translateX(-50%);width:min(900px,calc(100% - 64px));z-index:5;padding:24px 0;}.scroll-track>div{height:100svh}.scroll-track>div:last-child{height:100svh}.label-viewport{position:fixed;inset:76px 0 65px;display:grid;place-items:center;padding:12px 32px;z-index:3;pointer-events:none}.fixed-label{width:min(836px,100%);display:grid;grid-template-columns:minmax(0,1fr);align-items:center;max-height:100%;pointer-events:auto;overflow:hidden;}.scene{grid-area:1/1;min-width:0;opacity:0;visibility:hidden;pointer-events:none;max-height:100%;overflow:auto;scrollbar-width:thin;}.scene[data-scene="0"]{opacity:1;visibility:visible;pointer-events:auto}.contact-scene h2{font-size:clamp(45px,8vw,77px);letter-spacing:-.075em;line-height:1;margin:12px 0 30px}.contact-scene .brand{display:none}.contact-scene .footer-links{display:flex;flex-direction:column;gap:16px;font-size:17px}
 @media(max-width:600px){.top{width:calc(100% - 36px);padding:16px 0}.label-viewport{inset:60px 0 52px;padding:9px 18px}.top nav{gap:11px}.top nav>a:first-child{display:none}.fixed-label{padding:22px}.scene .section-head{margin-bottom:12px}.scene .project{padding:15px 0}.scene .project:last-child{padding-bottom:0}}
 @media(max-width:370px){.label-viewport{padding:6px 12px}.fixed-label{padding:17px}}
-@media(max-height:520px) and (orientation:landscape){.top{padding:9px 0}.label-viewport{inset:42px 0 32px;padding:5px 24px}.fixed-label{padding:15px 22px}.hero-top{gap:16px}.hero-top h1{font-size:41px;margin:5px 0 8px}.avatar{width:83px}.bio,.extras{font-size:11.5px;line-height:1.4;gap:4px}.extras{padding-top:7px;margin-top:8px}.section-head{margin-bottom:8px}.section-head h2{font-size:32px}.project{padding:7px 0;grid-template-columns:25px 1fr;gap:6px}.project h3{font-size:15px;margin-bottom:2px}.project p{font-size:11px;line-height:1.35}.chips,.circle{margin-top:4px}.chip{padding:2px 5px;font-size:10px}.contact-scene h2{font-size:44px;margin:6px 0 15px}}
+:where(html.compact-landscape) .top{padding:9px 0}:where(html.compact-landscape) .label-viewport{inset:42px 0 32px;padding:5px 24px}:where(html.compact-landscape) .fixed-label{padding:15px 22px}:where(html.compact-landscape) .hero-top{gap:16px}:where(html.compact-landscape) .hero-top h1{font-size:41px;margin:5px 0 8px}:where(html.compact-landscape) .avatar{width:83px}:where(html.compact-landscape) .bio,:where(html.compact-landscape) .extras{font-size:11.5px;line-height:1.4;gap:4px}:where(html.compact-landscape) .extras{padding-top:7px;margin-top:8px}:where(html.compact-landscape) .section-head{margin-bottom:8px}:where(html.compact-landscape) .section-head h2{font-size:32px}:where(html.compact-landscape) .project{padding:7px 0;grid-template-columns:25px 1fr;gap:6px}:where(html.compact-landscape) .project h3{font-size:15px;margin-bottom:2px}:where(html.compact-landscape) .project p{font-size:11px;line-height:1.35}:where(html.compact-landscape) .chips,:where(html.compact-landscape) .circle{margin-top:4px}:where(html.compact-landscape) .chip{padding:2px 5px;font-size:10px}:where(html.compact-landscape) .contact-scene h2{font-size:44px;margin:6px 0 15px}
 @media(prefers-reduced-motion:reduce){.scene{transition:none}}
 
 /* Fixed right-hand section rail, kept outside the glass sticker. */
@@ -33,7 +33,7 @@
 @media(hover:hover) and (pointer:fine){.rail-links a:hover:not([aria-current="location"])::after{background:white}}
 @media(max-width:600px){.label-viewport{padding-left:19px;padding-right:32px}.section-rail{right:3px;width:20px}.rail-links a{width:20px}}
 @media(max-width:370px){.label-viewport{padding-left:12px;padding-right:28px}}
-@media(max-height:520px) and (orientation:landscape){.label-viewport{padding-left:28px;padding-right:38px}}
+:where(html.compact-landscape) .label-viewport{padding-left:28px;padding-right:38px}
 
 /* Project pages; independently sized inside the original V4 label. */
 .task-page{display:grid;gap:18px}
@@ -58,7 +58,7 @@
 .pixel-card.unframed{background:none;border:0;box-shadow:none}.pixel-card.unframed .pixel-art{width:100%;height:100%;max-width:150px;max-height:150px}
 @media(max-width:600px){.fixed-label{--label-padding:22px}.task-top{grid-template-columns:1fr;gap:16px}.pixel-card{width:118px;height:118px}.pixel-art{width:88px;height:88px}.task-copy h3{font-size:22px}.task-copy p{font-size:13px}.task-page .section-head{margin-bottom:10px}}
 @media(max-width:370px){.fixed-label{--label-padding:17px}.pixel-card{width:104px;height:104px}.pixel-art{width:78px;height:78px}}
-@media(max-height:520px) and (orientation:landscape){.fixed-label{--label-padding:15px 22px}.task-top{grid-template-columns:100px 1fr;gap:12px}.pixel-card{width:100px;height:100px;border-radius:14px}.pixel-art{width:74px;height:74px}.task-copy h3{font-size:17px;margin-bottom:4px}.task-copy p{font-size:11px;line-height:1.35}.task-page .chips,.circle-line{margin-top:6px}}
+:where(html.compact-landscape) .fixed-label{--label-padding:15px 22px}:where(html.compact-landscape) .task-top{grid-template-columns:100px 1fr;gap:12px}:where(html.compact-landscape) .pixel-card{width:100px;height:100px;border-radius:14px}:where(html.compact-landscape) .pixel-art{width:74px;height:74px}:where(html.compact-landscape) .task-copy h3{font-size:17px;margin-bottom:4px}:where(html.compact-landscape) .task-copy p{font-size:11px;line-height:1.35}:where(html.compact-landscape) .task-page .chips,:where(html.compact-landscape) .circle-line{margin-top:6px}
 /* Two extra subpage dots; original rail geometry is unchanged. */
 .rail-subdots{position:absolute;z-index:2;pointer-events:none;top:calc(50% + 8px);left:50%;transform:translateX(-50%);display:grid;justify-items:center;gap:1px}
 .rail-subdots a{display:grid;place-items:center;width:24px;height:10px;text-decoration:none;pointer-events:auto;cursor:pointer;touch-action:manipulation}
@@ -82,6 +82,18 @@
 .eyebrow,.circle-title,.num{color:var(--muted)}
 .circle-dot.now{border-color:rgba(192,120,34,.45)}
 .fixed-label .scene[data-scene="0"] h1 span{color:#92C83E}
+
+/* Keep the sticker and its navigation on the small viewport, even when
+   mobile browser chrome expands or retracts. Only the tank uses dvh. */
+:root{--stable-viewport:100svh}
+.label-viewport{bottom:auto;height:calc(var(--stable-viewport) - 76px - 65px)}
+.section-rail{top:calc(var(--stable-viewport) * .5);height:clamp(105px,calc(var(--stable-viewport) * .29),220px)}
+@media(max-width:600px){.label-viewport{height:calc(var(--stable-viewport) - 60px - 52px)}}
+:where(html.compact-landscape) .label-viewport{height:calc(var(--stable-viewport) - 42px - 32px)}
+.tank{bottom:auto;height:100dvh}
+
+/* Freeze measured sticker and rail geometry across browser chrome changes. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 </style>
 </head>
 <body>
@@ -266,7 +278,32 @@ function scroll(){
   updateScenes(p);
   schedule();
 }
-function resize(){ w=Math.max(1,svg.clientWidth); h=Math.max(1,svg.clientHeight); svg.setAttribute('viewBox',`0 0 ${w} ${h}`); if(lastSensor) handleOrientation(lastSensor); scroll(); draw(); }
+// The layout is measured only on initial load or a genuine width/orientation change.
+const stickerViewport=document.querySelector('.label-viewport');
+const sectionRail=document.querySelector('.section-rail');
+const stableProbe=document.createElement('div');
+stableProbe.style.cssText='position:fixed;left:0;top:0;width:0;height:100svh;visibility:hidden;pointer-events:none';
+document.body.appendChild(stableProbe);
+let layoutKey='';
+function lockSticker(){
+  const width=document.documentElement.clientWidth;
+  const rotation=typeof window.orientation==='number'?window.orientation:(screen.orientation?.angle??0);
+  const key=width+':'+rotation;
+  if(key===layoutKey)return;
+  layoutKey=key;
+  const stableHeight=stableProbe.getBoundingClientRect().height||window.innerHeight;
+  document.documentElement.classList.toggle('compact-landscape',width>stableHeight&&stableHeight<=520);
+  // Remove only our previous locks; measure the original responsive layout.
+  const targets=[stickerViewport,paletteLabel,sectionRail];
+  const props=['left','top','right','bottom','width','height','max-height','transform'];
+  for(const el of targets)for(const prop of props)el.style.removeProperty(prop);
+  const [frame,sticker,rail]=targets.map(el=>el.getBoundingClientRect());
+  const px=v=>`${v}px`;
+  Object.assign(stickerViewport.style,{left:px(frame.left),top:px(frame.top),right:'auto',bottom:'auto',width:px(frame.width),height:px(frame.height)});
+  Object.assign(paletteLabel.style,{width:px(sticker.width),height:px(sticker.height),maxHeight:'none'});
+  Object.assign(sectionRail.style,{left:px(rail.left),top:px(rail.top),right:'auto',bottom:'auto',width:px(rail.width),height:px(rail.height),transform:'none'});
+}
+function resize(){ lockSticker(); w=Math.max(1,svg.clientWidth); h=Math.max(1,svg.clientHeight); svg.setAttribute('viewBox',`0 0 ${w} ${h}`); if(lastSensor) handleOrientation(lastSensor); scroll(); draw(); }
 function handleOrientation(e){
   if(!enabled||!Number.isFinite(e.beta)||!Number.isFinite(e.gamma)) return;
   lastSensor=e;
@@ -301,6 +338,8 @@ railSubdots.forEach((link,i)=>link.addEventListener('click',event=>{
 }));
 window.addEventListener('scroll',scroll,{passive:true});
 window.addEventListener('resize',resize,{passive:true});
+window.visualViewport?.addEventListener('resize',resize,{passive:true});
+if(typeof ResizeObserver==='function')new ResizeObserver(resize).observe(svg);
 screen.orientation?.addEventListener('change',resize);
 window.addEventListener('orientationchange',()=>{resize();setTimeout(resize,150);});
 reduced.addEventListener?.('change',schedule);
