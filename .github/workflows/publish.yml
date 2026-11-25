@@ -1,0 +1,31 @@
+name: Build and publish website
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: website-publish
+  cancel-in-progress: true
+jobs:
+  publish:
+    if: ${{ vars.DOCKERHUB_USERNAME != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        env:
+          IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/website
+        run: docker build -t "$IMAGE:latest" -t "$IMAGE:$GITHUB_SHA" .
+      - name: Log in to Docker Hub
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: printf '%s' "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+      - name: Publish image
+        env:
+          IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/website
+        run: |
+          docker push "$IMAGE:$GITHUB_SHA"
+          docker push "$IMAGE:latest"
