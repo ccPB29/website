@@ -92,8 +92,11 @@
 :where(html.compact-landscape) .label-viewport{height:calc(var(--stable-viewport) - 42px - 32px)}
 .tank{bottom:auto;height:100dvh}
 
-/* Freeze measured sticker and rail geometry across browser chrome changes. */
+/* Keep the layout viewport stable across browser chrome changes and pinch zoom. */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* At normal/underscale, align the fixed UI to the visual viewport even
+   if WebKit is still reporting a pan offset after a pinch gesture. */
+.top,.label-viewport,.section-rail{translate:var(--pinch-x,0px) var(--pinch-y,0px)}
 </style>
 </head>
 <body>
@@ -279,38 +282,47 @@ function scroll(){
   schedule();
 }
 // Keep the largest observed unzoomed viewport height per screen orientation.
-const stickerViewport=document.querySelector('.label-viewport');
-const sectionRail=document.querySelector('.section-rail');
 const stableProbe=document.createElement('div');
 stableProbe.style.cssText='position:fixed;left:0;top:0;width:0;height:100lvh;visibility:hidden;pointer-events:none';
 document.body.appendChild(stableProbe);
 let layoutKey='', lockedHeight=0;
+let pinchFrame=0, pinchSettle=0;
+function syncPinchOffset(){
+  const vv=window.visualViewport, root=document.documentElement;
+  const scale=vv?.scale||1;
+  // Keep normal zoom-in and pan behaviour unchanged. On zoom-out, account
+  // for residual visual viewport offset without changing the locked size.
+  const x=vv&&scale<=1.01?(vv.offsetLeft||0)+(scale<.99?(vv.width-root.clientWidth)/2:0):0;
+  const y=vv&&scale<=1.01?(vv.offsetTop||0):0;
+  root.style.setProperty('--pinch-x',`${Math.round(x*100)/100}px`);
+  root.style.setProperty('--pinch-y',`${Math.round(y*100)/100}px`);
+}
+function handleVisualViewport(){
+  if(!pinchFrame)pinchFrame=requestAnimationFrame(()=>{pinchFrame=0;resize();});
+  // WebKit can report the final offset/scale after the last resize event.
+  clearTimeout(pinchSettle);
+  pinchSettle=setTimeout(resize,250);
+}
 const maxHeights=new Map();
 function lockSticker(){
+  const vv=window.visualViewport;
+  // Pinch-zoom is not a layout resize. Never cache zoomed geometry.
+  if(vv && (Math.abs(vv.scale-1)>.001 || Math.abs(vv.width-document.documentElement.clientWidth)>2 || Math.abs(vv.offsetLeft)>2 || Math.abs(vv.offsetTop)>2))return;
   const width=document.documentElement.clientWidth;
   const rotation=typeof window.orientation==='number'?window.orientation:(screen.orientation?.angle??0);
   const key=width+':'+rotation;
-  const vv=window.visualViewport;
-  if(vv && Math.abs(vv.scale-1)>.02 && layoutKey===key)return;
-  const candidate=Math.max(stableProbe.getBoundingClientRect().height||0,window.innerHeight||0,document.documentElement.clientHeight||0,vv&&Math.abs(vv.scale-1)<.02?vv.height:0);
+  const candidate=Math.max(stableProbe.offsetHeight||0,window.innerHeight||0,document.documentElement.clientHeight||0);
   const stableHeight=Math.round(Math.max(candidate,maxHeights.get(key)||0));
-  if(key===layoutKey && stableHeight<=lockedHeight)return;
+  if(key===layoutKey && stableHeight===lockedHeight)return;
   layoutKey=key;
   lockedHeight=stableHeight;
   maxHeights.set(key,stableHeight);
   document.documentElement.style.setProperty('--stable-viewport',`${stableHeight}px`);
   document.documentElement.classList.toggle('compact-landscape',width>stableHeight&&stableHeight<=520);
-  // Remove only our previous locks; measure the original responsive layout.
-  const targets=[stickerViewport,paletteLabel,sectionRail];
-  const props=['left','top','right','bottom','width','height','max-height','transform'];
-  for(const el of targets)for(const prop of props)el.style.removeProperty(prop);
-  const [frame,sticker,rail]=targets.map(el=>el.getBoundingClientRect());
-  const px=v=>`${v}px`;
-  Object.assign(stickerViewport.style,{left:px(frame.left),top:px(frame.top),right:'auto',bottom:'auto',width:px(frame.width),height:px(frame.height)});
-  Object.assign(paletteLabel.style,{width:px(sticker.width),height:px(sticker.height),maxHeight:'none'});
-  Object.assign(sectionRail.style,{left:px(rail.left),top:px(rail.top),right:'auto',bottom:'auto',width:px(rail.width),height:px(rail.height),transform:'none'});
+  // CSS positions the sticker and rail in the layout viewport. Do not
+  // persist getBoundingClientRect coordinates across visual viewport changes.
 }
-function resize(){ lockSticker(); w=Math.max(1,svg.clientWidth); h=Math.max(1,svg.clientHeight); svg.setAttribute('viewBox',`0 0 ${w} ${h}`); if(lastSensor) handleOrientation(lastSensor); scroll(); draw(); }
+function resize(){ syncPinchOffset(); lockSticker(); w=Math.max(1,svg.clientWidth); h=Math.max(1,svg.clientHeight); svg.setAttribute('viewBox',`0 0 ${w} ${h}`); if(lastSensor) handleOrientation(lastSensor); scroll(); draw(); }
 function handleOrientation(e){
   if(!enabled||!Number.isFinite(e.beta)||!Number.isFinite(e.gamma)) return;
   lastSensor=e;
@@ -345,7 +357,8 @@ railSubdots.forEach((link,i)=>link.addEventListener('click',event=>{
 }));
 window.addEventListener('scroll',scroll,{passive:true});
 window.addEventListener('resize',resize,{passive:true});
-window.visualViewport?.addEventListener('resize',resize,{passive:true});
+window.visualViewport?.addEventListener('resize',handleVisualViewport,{passive:true});
+window.visualViewport?.addEventListener('scroll',handleVisualViewport,{passive:true});
 if(typeof ResizeObserver==='function')new ResizeObserver(resize).observe(svg);
 screen.orientation?.addEventListener('change',resize);
 window.addEventListener('orientationchange',()=>{resize();setTimeout(resize,150);});
