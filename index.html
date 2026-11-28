@@ -481,12 +481,12 @@ function reflectSideWall(v,n,body,r,omega,invI,restitution,friction){
   let state=sideWallContacts.get(body);
   // V209: independently scale the first rebound's normal and tangential components.
   const tangentSpeed=Math.hypot(...v.map((a,i)=>a-incoming*n[i]));
-  const firstSpeed=Math.hypot(0.8*incoming,.4*tangentSpeed);
+  const firstSpeed=Math.hypot(0.6*incoming,.4*tangentSpeed);
   const firstCap=Math.min(1,maxSpeed/firstSpeed);
   const target=state?state.target:firstSpeed*firstCap;
   const unused=!state||!state.used.has(bit);
   const gain=unused?(state?Math.min(maxSpeed,Math.max(speed,target))/speed:.4*firstCap):1;
-  const normalGain=state?gain:0.8*firstCap;
+  const normalGain=state?gain:0.6*firstCap;
   if(sideWallTravel(incoming*normalGain,n)<sideWallMinTravel())return false;
   if(!state){state={used:new Set(),target};sideWallContacts.set(body,state);}
   if(unused)state.used.add(bit);
