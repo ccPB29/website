@@ -479,10 +479,15 @@ function reflectSideWall(v,n,body,r,omega,invI,restitution,friction){
   const incoming=dot3(v,n);if(incoming<=0)return false;
   const speed=Math.hypot(...v),maxSpeed=1500;
   let state=sideWallContacts.get(body);
-  const target=state?state.target:Math.min(maxSpeed,.4*speed);
+  // V209: independently scale the first rebound's normal and tangential components.
+  const tangentSpeed=Math.hypot(...v.map((a,i)=>a-incoming*n[i]));
+  const firstSpeed=Math.hypot(0.8*incoming,.4*tangentSpeed);
+  const firstCap=Math.min(1,maxSpeed/firstSpeed);
+  const target=state?state.target:firstSpeed*firstCap;
   const unused=!state||!state.used.has(bit);
-  const gain=unused?(state?Math.min(maxSpeed,Math.max(speed,target))/speed:target/speed):1;
-  if(sideWallTravel(incoming*gain,n)<sideWallMinTravel())return false;
+  const gain=unused?(state?Math.min(maxSpeed,Math.max(speed,target))/speed:.4*firstCap):1;
+  const normalGain=state?gain:0.8*firstCap;
+  if(sideWallTravel(incoming*normalGain,n)<sideWallMinTravel())return false;
   if(!state){state={used:new Set(),target};sideWallContacts.set(body,state);}
   if(unused)state.used.add(bit);
   // Solve the ordinary contact on a temporary linear velocity, then keep
@@ -496,7 +501,7 @@ function reflectSideWall(v,n,body,r,omega,invI,restitution,friction){
     const tangent=after.map((a,i)=>a-normal*n[i]),ts=Math.hypot(...tangent);
     if(ts>.001){const u=tangent.map(a=>a/ts),ru=cross3(r,u),f=Math.min(j*friction,ts/(1+invI*dot3(ru,ru)));for(let i=0;i<3;i++)omega[i]-=ru[i]*f*invI;}
   }
-  for(let j=0;j<3;j++)v[j]=gain*(v[j]-2*incoming*n[j]);
+  for(let j=0;j<3;j++)v[j]=gain*(v[j]-incoming*n[j])-normalGain*incoming*n[j];
   return true;
 }
 function collideTank(allowBoost=true){
